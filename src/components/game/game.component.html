@@ -1,0 +1,9 @@
+<div class="score-board">
+  <h2>Current Player: {{ currentPlayer?.name }}</h2>
+  <h2>Score: {{ currentPlayer?.score }}</h2>
+</div>
+<div class="buttons">
+  <button *ngFor="let value of buttonValues" (click)="buttonClicked.emit(value)">
+    {{ value }}
+  </button>
+</div>
