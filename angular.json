@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/moelkky",
+            "outputPath": "dist/fantasy-football",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -59,10 +59,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "moelkky:build:production"
+              "buildTarget": "fantasy-football:build:production"
             },
             "development": {
-              "buildTarget": "moelkky:build:development"
+              "buildTarget": "fantasy-football:build:development"
             }
           },
           "defaultConfiguration": "development"

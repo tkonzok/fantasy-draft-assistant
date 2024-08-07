@@ -12,7 +12,7 @@ import {Player, Status} from "../domain/player/player";
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'moelkky';
+  title = 'fantasy-football';
   players: Player[] = [];
   currentPlayerIndex: number = 0;
 
