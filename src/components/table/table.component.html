@@ -1,0 +1,22 @@
+<table>
+  <thead>
+  <tr>
+    <th>OVR</th>
+    <th>POS</th>
+    <th>RANK</th>
+    <th>NAME</th>
+    <th>TEAM</th>
+    <th>BYE</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let player of data">
+    <td>{{ player.ovr }}</td>
+    <td>{{ player.pos }}</td>
+    <td>{{ player.rank }}</td>
+    <td>{{ player.name }}</td>
+    <td>{{ player.team }}</td>
+    <td>{{ player.bye }}</td>
+  </tr>
+  </tbody>
+</table>
