@@ -1,1 +1,4 @@
-<app-table></app-table>
+<div class="container">
+  <app-team [players]="players"></app-team>
+  <app-draft-board (selectPlayer)="playerSelected($event)"></app-draft-board>
+</div>

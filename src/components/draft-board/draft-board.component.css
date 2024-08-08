@@ -1,0 +1,24 @@
+.draft-board-grid {
+  display: grid;
+  grid-template-columns: max-content;
+  width: fit-content;
+  gap: 10px;
+  border: 1px solid #ddd;
+}
+
+.grid-header {
+  display: grid;
+  grid-template-columns: repeat(5, 64px) 256px repeat(2, 64px);
+  font-weight: bold;
+}
+
+.grid-header > div {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: start;
+}
+
+.grid-row {
+  display: grid;
+  grid-template-columns: 1fr; /* Ensures each row spans all columns */
+}

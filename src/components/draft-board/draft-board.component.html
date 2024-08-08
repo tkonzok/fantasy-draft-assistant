@@ -1,0 +1,16 @@
+<div class="draft-board-grid">
+  <div class="grid-header">
+    <div></div>
+    <div></div>
+    <div>OVR</div>
+    <div>POS</div>
+    <div>RANK</div>
+    <div>NAME</div>
+    <div>TEAM</div>
+    <div>BYE</div>
+  </div>
+
+  <div *ngFor="let player of availablePlayers" class="grid-row">
+    <app-draft-board-row [player]="player" (select)="onSelectPlayer(player)"></app-draft-board-row>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="team-grid">
+  <div class="grid-header">
+    <div>OVR</div>
+    <div>POS</div>
+    <div>RANK</div>
+    <div>NAME</div>
+    <div>TEAM</div>
+    <div>BYE</div>
+  </div>
+
+  <div *ngFor="let player of players" class="grid-row">
+    <app-team-row [player]="player"></app-team-row>
+  </div>
+</div>

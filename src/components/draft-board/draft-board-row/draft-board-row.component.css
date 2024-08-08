@@ -1,0 +1,22 @@
+.draft-board-row {
+  display: grid;
+  grid-template-columns: repeat(5, 64px) 256px repeat(2, 64px);
+}
+
+.draft-board-row > div {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: start;
+}
+
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+button img {
+  width: 20px;
+  height: 20px;
+}
