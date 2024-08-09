@@ -2,8 +2,9 @@
   display: grid;
   grid-template-columns: max-content;
   width: fit-content;
-  gap: 10px;
+  max-height: 100%;
   border: 1px solid #ddd;
+  overflow: hidden;
 }
 
 .grid-header {
@@ -16,6 +17,11 @@
   padding: 10px;
   border-bottom: 1px solid #ddd;
   text-align: start;
+}
+
+.grid-row-wrapper {
+  max-height: min(1280px, calc(100vh - 96px));
+  overflow: auto;
 }
 
 .grid-row {

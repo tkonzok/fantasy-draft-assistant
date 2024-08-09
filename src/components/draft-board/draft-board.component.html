@@ -10,7 +10,9 @@
     <div>BYE</div>
   </div>
 
-  <div *ngFor="let player of availablePlayers" class="grid-row">
-    <app-draft-board-row [player]="player" (select)="onSelectPlayer(player)"></app-draft-board-row>
+  <div class="grid-row-wrapper">
+    <div *ngFor="let player of players" class="grid-row">
+      <app-draft-board-row [player]="player"></app-draft-board-row>
+    </div>
   </div>
 </div>

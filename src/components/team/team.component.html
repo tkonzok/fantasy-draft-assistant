@@ -8,7 +8,9 @@
     <div>BYE</div>
   </div>
 
-  <div *ngFor="let player of players" class="grid-row">
-    <app-team-row [player]="player"></app-team-row>
+  <div class="grid-row-wrapper">
+    <div *ngFor="let player of players" class="grid-row">
+      <app-team-row [player]="player"></app-team-row>
+    </div>
   </div>
 </div>

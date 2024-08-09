@@ -2,13 +2,14 @@
   display: grid;
   grid-template-columns: max-content;
   width: fit-content;
-  gap: 10px;
+  max-height: 100%;
   border: 1px solid #ddd;
+  overflow: hidden;
 }
 
 .grid-header {
   display: grid;
-  grid-template-columns: repeat(5, 64px) 256px repeat(2, 64px);
+  grid-template-columns: repeat(2, 32px) repeat(3, 64px) 256px repeat(2, 64px);
   font-weight: bold;
 }
 
@@ -18,7 +19,12 @@
   text-align: start;
 }
 
+.grid-row-wrapper {
+  max-height: min(1280px, calc(100vh - 96px));
+  overflow: auto;
+}
+
 .grid-row {
   display: grid;
-  grid-template-columns: 1fr; /* Ensures each row spans all columns */
+  grid-template-columns: 1fr;
 }

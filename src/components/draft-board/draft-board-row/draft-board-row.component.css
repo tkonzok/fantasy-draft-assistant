@@ -1,12 +1,18 @@
 .draft-board-row {
   display: grid;
-  grid-template-columns: repeat(5, 64px) 256px repeat(2, 64px);
+  grid-template-columns: repeat(2, 32px) repeat(3, 64px) 256px repeat(2, 64px);
+  align-items: center;
+  height: 40px;
+  padding: 8px 0;
+  border-bottom: 1px solid #ddd;
 }
 
-.draft-board-row > div {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
+.draft-board-row > * {
+  display: flex;
+  justify-content: start;
+  align-items: center;
   text-align: start;
+  padding: 8px;
 }
 
 button {

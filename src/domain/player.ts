@@ -1,13 +1,19 @@
-import {Expose, plainToInstance, Type} from 'class-transformer';
+import {Expose, Transform, Type} from 'class-transformer';
+import {Position} from "../components/position/position.component";
+
+export enum PlayerStatus {
+  AVAILABLE,
+  NOT_AVAILABLE,
+  DRAFTED,
+}
 
 export class Player {
   @Type(() => String)
   @Expose()
   ovr!: string;
 
-  @Type(() => String)
   @Expose()
-  pos!: string;
+  pos!: Position;
 
   @Type(() => String)
   @Expose()
@@ -24,4 +30,8 @@ export class Player {
   @Type(() => String)
   @Expose()
   bye!: string;
+
+  @Expose()
+  @Transform(({ value }) => value ?? PlayerStatus.AVAILABLE)
+  status!: PlayerStatus;
 }

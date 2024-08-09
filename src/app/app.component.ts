@@ -1,8 +1,12 @@
-import {Component} from '@angular/core';
-import {RouterOutlet} from '@angular/router';
-import {DraftBoardComponent} from "../components/draft-board/draft-board.component";
-import {TeamComponent} from "../components/team/team.component";
-import {Player} from "../domain/player";
+import { Component, OnInit } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import { DraftBoardComponent } from '../components/draft-board/draft-board.component';
+import { TeamComponent } from '../components/team/team.component';
+import { Player } from '../domain/player';
+import { csvToJson } from '../utils/csv-to-json';
+import { data1qb } from '../assets/1qb';
+import { plainToInstance } from 'class-transformer';
+import { PlayerService } from '../domain/player.service';
 
 @Component({
   selector: 'app-root',
@@ -10,15 +14,17 @@ import {Player} from "../domain/player";
   imports: [RouterOutlet, DraftBoardComponent, TeamComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
-  providers: []
+  providers: [],
 })
-export class AppComponent {
-  title = 'fantasy-football';
-  players: Player[] = [];
+export class AppComponent implements OnInit {
+  constructor(private playerService: PlayerService) {}
 
-  constructor() {}
-
-  protected playerSelected(player: Player) {
-    this.players.push(player);
+  ngOnInit(): void {
+    const plainData = csvToJson(data1qb);
+    const initialPlayers: Player[] = plainToInstance(Player, plainData, {
+      excludeExtraneousValues: true,
+      enableImplicitConversion: true
+    });
+    this.playerService.init(initialPlayers);
   }
 }

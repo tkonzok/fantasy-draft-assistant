@@ -1,6 +1,6 @@
 <div class="team-row">
   <div>{{ player.ovr }}</div>
-  <div>{{ player.pos }}</div>
+  <app-position [pos]="player.pos"></app-position>
   <div>{{ player.rank }}</div>
   <div>{{ player.name }}</div>
   <div>{{ player.team }}</div>

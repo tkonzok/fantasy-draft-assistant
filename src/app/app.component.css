@@ -4,4 +4,12 @@
   gap: 20px;
   justify-content: space-around;
   margin: 32px auto 0;
+  height: 100vh;
+}
+
+app-team, app-draft-board {
+  flex: 1;
+  display: block;
+  max-height: calc(100vh - 64px);
+  margin: 16px 0;
 }

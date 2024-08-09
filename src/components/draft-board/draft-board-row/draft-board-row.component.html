@@ -1,16 +1,26 @@
 <div class="draft-board-row">
   <div>
-    <button (click)="select.emit()">
-      <img ngSrc="../../../assets/checkmark.svg" alt="checkmark" height="16" width="16">
+    <button (click)="draft()">
+      <img
+        ngSrc="../../../assets/checkmark.svg"
+        alt="checkmark"
+        height="24"
+        width="24"
+      />
     </button>
   </div>
   <div>
-    <button>
-      <img ngSrc="../../../assets/checkmark.svg" alt="checkmark" height="16" width="16">
+    <button (click)="remove()">
+      <img
+        ngSrc="../../../assets/cross.svg"
+        alt="cross"
+        height="24"
+        width="24"
+      />
     </button>
   </div>
   <div>{{ player.ovr }}</div>
-  <div>{{ player.pos }}</div>
+  <app-position [pos]="player.pos"></app-position>
   <div>{{ player.rank }}</div>
   <div>{{ player.name }}</div>
   <div>{{ player.team }}</div>
