@@ -2,10 +2,10 @@ import { Component, Input, OnInit } from '@angular/core';
 import {NgClass} from "@angular/common";
 
 export enum Position {
+  QB = 'QB',
   RB = 'RB',
   WR = 'WR',
   TE = 'TE',
-  QB = 'QB',
 }
 
 @Component({
@@ -20,14 +20,14 @@ export class PositionComponent implements OnInit {
 
   getBackgroundClass(): string {
     switch (this.pos) {
+      case Position.QB:
+        return 'qb-background';
       case Position.RB:
         return 'rb-background';
       case Position.WR:
         return 'wr-background';
       case Position.TE:
         return 'te-background';
-      case Position.QB:
-        return 'qb-background';
       default:
         return '';
     }

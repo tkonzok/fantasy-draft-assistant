@@ -11,5 +11,12 @@ app-team, app-draft-board {
   flex: 1;
   display: block;
   max-height: calc(100vh - 64px);
+}
+
+app-team {
+  margin: 63px 0;
+}
+
+app-draft-board {
   margin: 16px 0;
 }

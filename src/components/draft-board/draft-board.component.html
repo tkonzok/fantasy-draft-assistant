@@ -1,3 +1,29 @@
+<div class="filter-buttons">
+  <button (click)="togglePosition(Position.QB)" [ngClass]="{
+      'qb-background': visiblePositions.has(Position.QB),
+    }">
+    {{ Position.QB }}
+  </button>
+  <button
+    (click)="togglePosition(Position.RB)"
+    [ngClass]="{
+      'rb-background': visiblePositions.has(Position.RB),
+    }"
+  >
+    {{ Position.RB }}
+  </button>
+  <button (click)="togglePosition(Position.WR)" [ngClass]="{
+      'wr-background': visiblePositions.has(Position.WR),
+    }">
+    {{ Position.WR }}
+  </button>
+  <button (click)="togglePosition(Position.TE)" [ngClass]="{
+      'te-background': visiblePositions.has(Position.TE),
+    }">
+    {{ Position.TE }}
+  </button>
+</div>
+
 <div class="draft-board-grid">
   <div class="grid-header">
     <div></div>
@@ -11,7 +37,7 @@
   </div>
 
   <div class="grid-row-wrapper">
-    <div *ngFor="let player of players" class="grid-row">
+    <div *ngFor="let player of filteredPlayers" class="grid-row">
       <app-draft-board-row [player]="player"></app-draft-board-row>
     </div>
   </div>

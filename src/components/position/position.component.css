@@ -4,20 +4,3 @@
   border-radius: 4px;
   font-weight: bold;
 }
-
-.rb-background {
-  background-color: green;
-}
-
-.wr-background {
-  background-color: blue;
-}
-
-.te-background {
-  background-color: orange;
-  color: #000;
-}
-
-.qb-background {
-  background-color: purple;
-}

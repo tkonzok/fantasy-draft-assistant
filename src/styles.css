@@ -80,3 +80,23 @@ body {
   font-weight: 900;
   font-style: italic;
 }
+
+.rb-background {
+  background-color: green;
+  color: #fff;
+}
+
+.wr-background {
+  background-color: blue;
+  color: #fff;
+}
+
+.te-background {
+  background-color: orange;
+  color: #000;
+}
+
+.qb-background {
+  background-color: purple;
+  color: #fff;
+}
