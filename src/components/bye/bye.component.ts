@@ -4,33 +4,35 @@ import { PlayerStatus } from '../../domain/player';
 import { PlayerService } from '../../domain/player.service';
 
 @Component({
-  selector: 'app-team',
-  templateUrl: './team.component.html',
-  styleUrls: ['./team.component.css'],
+  selector: 'app-bye',
+  templateUrl: './bye.component.html',
+  styleUrls: ['./bye.component.css'],
   standalone: true,
   imports: [NgClass],
 })
-export class TeamComponent implements OnInit {
-  @Input({required: true}) team!: string;
-  private timesTeamDrafted: number = 0;
+export class ByeComponent implements OnInit {
+  @Input({ required: true }) bye!: string;
+  private timesByeDrafted: number = 0;
 
   constructor(private playerService: PlayerService) {}
 
   ngOnInit(): void {
     this.playerService.players$.subscribe((players) => {
-      this.timesTeamDrafted = players
+      this.timesByeDrafted = players
         .filter((player) => player.status === PlayerStatus.DRAFTED)
-        .map((player) => player.team)
-        .filter((team) => team === this.team).length;
+        .map((player) => player.bye)
+        .filter((bye) => bye === this.bye).length;
     });
   }
 
   protected getBackgroundClass(): string {
-    switch (this.timesTeamDrafted) {
+    switch (this.timesByeDrafted) {
       case 0:
         return '';
       case 1:
         return 'white-background';
+      case 2:
+        return 'orange-background';
       default:
         return 'red-background';
     }

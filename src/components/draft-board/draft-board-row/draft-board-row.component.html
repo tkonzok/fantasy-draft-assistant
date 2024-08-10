@@ -23,6 +23,6 @@
   <app-position [pos]="player.pos"></app-position>
   <div>{{ player.rank }}</div>
   <div>{{ player.name }}</div>
-  <div>{{ player.team }}</div>
-  <div>{{ player.bye }}</div>
+  <app-team [team]="player.team"></app-team>
+  <app-bye [bye]="player.bye"></app-bye>
 </div>

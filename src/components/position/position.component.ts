@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import {NgClass} from "@angular/common";
 
 export enum Position {
@@ -15,10 +15,10 @@ export enum Position {
   standalone: true,
   imports: [NgClass],
 })
-export class PositionComponent implements OnInit {
-  @Input() pos!: Position;
+export class PositionComponent {
+  @Input({required: true}) pos!: Position;
 
-  getBackgroundClass(): string {
+  protected getBackgroundClass(): string {
     switch (this.pos) {
       case Position.QB:
         return 'qb-background';
@@ -32,6 +32,4 @@ export class PositionComponent implements OnInit {
         return '';
     }
   }
-
-  ngOnInit(): void {}
 }

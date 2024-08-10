@@ -1,4 +1,4 @@
-.team-wrapper {
+.bye-wrapper {
   padding: 2px 8px;
   border: 1px solid transparent;
   border-radius: 4px;
@@ -7,6 +7,11 @@
 
 .white-background {
   background-color: #fff;
+  color: #000;
+}
+
+.orange-background {
+  background-color: #c90;
   color: #000;
 }
 

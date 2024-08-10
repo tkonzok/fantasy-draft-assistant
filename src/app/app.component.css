@@ -7,13 +7,13 @@
   height: 100vh;
 }
 
-app-team, app-draft-board {
+app-drafted-team, app-draft-board {
   flex: 1;
   display: block;
   max-height: calc(100vh - 64px);
 }
 
-app-team {
+app-drafted-team {
   margin: 63px 0;
 }
 

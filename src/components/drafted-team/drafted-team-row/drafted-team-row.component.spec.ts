@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TeamRowComponent } from './team-row.component';
+import { DraftedTeamRowComponent } from './drafted-team-row.component';
 
 describe('PlayerRowComponent', () => {
-  let component: TeamRowComponent;
-  let fixture: ComponentFixture<TeamRowComponent>;
+  let component: DraftedTeamRowComponent;
+  let fixture: ComponentFixture<DraftedTeamRowComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TeamRowComponent],
+      imports: [DraftedTeamRowComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(TeamRowComponent);
+    fixture = TestBed.createComponent(DraftedTeamRowComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

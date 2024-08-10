@@ -4,12 +4,12 @@ import { NgOptimizedImage } from '@angular/common';
 import {PositionComponent} from "../../position/position.component";
 
 @Component({
-  selector: 'app-team-row',
+  selector: 'app-drafted-team-row',
   standalone: true,
   imports: [NgOptimizedImage, PositionComponent],
-  templateUrl: './team-row.component.html',
-  styleUrl: './team-row.component.css',
+  templateUrl: './drafted-team-row.component.html',
+  styleUrl: './drafted-team-row.component.css',
 })
-export class TeamRowComponent {
+export class DraftedTeamRowComponent {
   @Input({ required: true }) player!: Player;
 }
