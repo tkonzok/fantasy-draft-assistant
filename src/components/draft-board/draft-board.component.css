@@ -1,7 +1,12 @@
-.filter-buttons {
+.filters-wrapper {
   display: flex;
   gap: 10px;
   margin-bottom: 10px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 10px;
 }
 
 .filter-buttons button {
@@ -47,3 +52,38 @@
   display: grid;
   grid-template-columns: 1fr;
 }
+
+.black-background {
+  background-color: #000;
+  color: #fff;
+}
+
+.search-container {
+  position: relative;
+  display: inline-block;
+}
+
+.search-input {
+  height: 100%;
+  padding-left: 8px;
+  padding-right: 30px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 24px;
+  color: #999;
+}
+
+.clear-btn:hover {
+  color: #333;
+}
+
