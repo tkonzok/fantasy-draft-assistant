@@ -35,6 +35,7 @@
   display: grid;
   grid-template-columns: repeat(2, 32px) repeat(3, 64px) 256px repeat(2, 64px);
   font-weight: bold;
+  background-color: #3f3f3f;
 }
 
 .grid-header > div {
@@ -87,3 +88,6 @@
   color: #333;
 }
 
+.highlighted {
+  background-color: #6f6f6f;
+}

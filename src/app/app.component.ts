@@ -17,6 +17,8 @@ import { PlayerService } from '../domain/player.service';
   providers: [],
 })
 export class AppComponent implements OnInit {
+  protected draftPosition: number = 1;
+
   constructor(private playerService: PlayerService) {}
 
   ngOnInit(): void {
@@ -26,5 +28,17 @@ export class AppComponent implements OnInit {
       enableImplicitConversion: true
     });
     this.playerService.init(initialPlayers);
+  }
+
+  protected incrementDraftPosition() {
+    if (this.draftPosition < 12) {
+      this.draftPosition++;
+    }
+  }
+
+  protected decrementDraftPosition() {
+    if (this.draftPosition > 1) {
+      this.draftPosition--;
+    }
   }
 }

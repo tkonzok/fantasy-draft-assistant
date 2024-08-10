@@ -62,7 +62,7 @@
 
   <div class="grid-row-wrapper">
     <div *ngFor="let player of filteredPlayers" class="grid-row">
-      <app-draft-board-row [player]="player"></app-draft-board-row>
+      <app-draft-board-row [player]="player" [ngClass]="highlightedPlayers.includes(player) ? 'highlighted' : ''"></app-draft-board-row>
     </div>
   </div>
 </div>

@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import {JsonPipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { JsonPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import { Player, PlayerStatus } from '../../domain/player';
 import { DraftBoardRowComponent } from './draft-board-row/draft-board-row.component';
 import { PlayerService } from '../../domain/player.service';
-import {Position} from "../position/position.component";
-import {FormsModule} from "@angular/forms";
+import { Position } from '../position/position.component';
+import { FormsModule } from '@angular/forms';
+import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
 
 @Component({
   selector: 'app-draft-board',
@@ -18,11 +19,20 @@ import {FormsModule} from "@angular/forms";
     NgIf,
   ],
   templateUrl: './draft-board.component.html',
-  styleUrl: './draft-board.component.css',
+  styleUrls: ['./draft-board.component.css'],
 })
-export class DraftBoardComponent implements OnInit {
-  protected players: Player[] = [];
+export class DraftBoardComponent implements OnInit, OnDestroy {
+  @Input() set draftPosition(value: number) {
+    const pickPositions: number[] = this.getPickPositions(value);
+    this.pickPositionsSubject.next(pickPositions);
+  }
+
+  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(this.getPickPositions(1));
+  private subscriptions: Subscription = new Subscription();
+  private totalPlayers: Player[] = [];
+  protected availablePlayers: Player[] = [];
   protected filteredPlayers: Player[] = [];
+  protected highlightedPlayers: Player[] = [];
   protected searchTerm: string = '';
   protected readonly visiblePositions: Set<string> = new Set();
   protected readonly Position = Position;
@@ -30,13 +40,28 @@ export class DraftBoardComponent implements OnInit {
   constructor(private playerService: PlayerService) {}
 
   ngOnInit(): void {
-    this.playerService.players$.subscribe((players) => {
-      this.players = players.filter(
-        (player) => player.status === PlayerStatus.AVAILABLE,
-      );
-      this.clearSearch();
-      this.filterPlayers();
-    });
+    const combined$ = combineLatest([
+      this.pickPositionsSubject,
+      this.playerService.players$,
+    ]);
+
+    this.subscriptions.add(
+      combined$.pipe(
+        switchMap(([pickPositions, players]) => {
+          this.totalPlayers = players;
+          this.availablePlayers = players.filter(
+            (player) => player.status === PlayerStatus.AVAILABLE
+          );
+          this.updateHighlightedPlayers(pickPositions);
+          this.filterPlayers();
+          return [];
+        })
+      ).subscribe()
+    );
+  }
+
+  ngOnDestroy(): void {
+    this.subscriptions.unsubscribe();
   }
 
   protected togglePosition(position: Position): void {
@@ -49,7 +74,7 @@ export class DraftBoardComponent implements OnInit {
   }
 
   protected filterPlayers(): void {
-    this.filteredPlayers = this.players.filter((player) => {
+    this.filteredPlayers = this.availablePlayers.filter((player) => {
       const matchesPosition =
         this.visiblePositions.size === 0 ||
         this.visiblePositions.has(player.pos);
@@ -65,6 +90,46 @@ export class DraftBoardComponent implements OnInit {
   protected clearSearch() {
     this.searchTerm = '';
     this.filterPlayers();
+  }
+
+  private updateHighlightedPlayers(pickPositions: number[]): void {
+    this.highlightedPlayers = this.determineHighlightedPlayers(
+      this.availablePlayers,
+      pickPositions,
+    );
+    this.filterPlayers();
+  }
+
+  private determineHighlightedPlayers(
+    availablePlayers: Player[],
+    pickPositions: number[],
+  ) {
+    const numberOfTakenPlayers: number = this.totalPlayers.length - availablePlayers.length;
+    const currentPick: number = numberOfTakenPlayers + 1;
+    return availablePlayers.filter((player: Player, index: number) =>
+      pickPositions.some(
+        (pickPosition) => pickPosition - currentPick === index,
+      ),
+    );
+  }
+
+  private getPickPositions(
+    draftPosition: number,
+    totalTeams: number = 12,
+    totalRounds: number = 20,
+  ): number[] {
+    const picks: number[] = [];
+
+    for (let round = 1; round <= totalRounds; round++) {
+      const pickInRound =
+        round % 2 === 1
+          ? (round - 1) * totalTeams + draftPosition
+          : round * totalTeams - draftPosition + 1;
+
+      picks.push(pickInRound);
+    }
+
+    return picks;
   }
 
   private matchesSearchTerm(player: Player) {

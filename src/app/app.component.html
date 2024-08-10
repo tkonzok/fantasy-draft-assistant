@@ -1,4 +1,12 @@
 <div class="container">
-  <app-drafted-team></app-drafted-team>
-  <app-draft-board></app-draft-board>
+  <div class="flex column mt-16">
+    <div class="draft-position-wrapper">
+      <span class="draft-position-label">Draft Position: </span>
+      <button (click)="decrementDraftPosition()" [disabled]="draftPosition <= 1" class="draft-position-control-btn">−</button>
+      <span class="draft-position-display">{{ draftPosition }}</span>
+      <button (click)="incrementDraftPosition()" [disabled]="draftPosition >= 12" class="draft-position-control-btn">+</button>
+    </div>
+    <app-drafted-team></app-drafted-team>
+  </div>
+  <app-draft-board class="mt-16" [draftPosition]="draftPosition"></app-draft-board>
 </div>

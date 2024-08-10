@@ -22,6 +22,19 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+.flex {
+  display: flex;
+  gap: 16px;
+}
+
+.flex.column {
+  flex-direction: column;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
 .roboto-thin {
   font-family: "Roboto", sans-serif;
   font-weight: 100;

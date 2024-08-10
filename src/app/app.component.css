@@ -4,19 +4,49 @@
   gap: 20px;
   justify-content: space-around;
   margin: 32px auto 0;
-  height: 100vh;
+  padding: 16px;
+  height: calc(100vh - 32px);
 }
 
 app-drafted-team, app-draft-board {
-  flex: 1;
   display: block;
   max-height: calc(100vh - 64px);
 }
 
-app-drafted-team {
-  margin: 63px 0;
+.draft-position-label {
+  font-size: 18px;
 }
 
-app-draft-board {
-  margin: 16px 0;
+.draft-position-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.draft-position-control-btn {
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: transparent;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.draft-position-control-btn:disabled {
+  cursor: not-allowed;
+  color: #999;
+}
+
+.draft-position-display {
+  font-size: 18px;
+  font-weight: bold;
+  width: 30px;
+  text-align: center;
 }
