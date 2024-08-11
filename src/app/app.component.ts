@@ -4,9 +4,9 @@ import { DraftBoardComponent } from '../components/draft-board/draft-board.compo
 import { DraftedTeamComponent } from '../components/drafted-team/drafted-team.component';
 import { Player } from '../domain/player';
 import { csvToJson } from '../utils/csv-to-json';
-import { data1qb } from '../assets/1qb';
 import { plainToInstance } from 'class-transformer';
 import { PlayerService } from '../domain/player.service';
+import {dataHppr1qb} from "../assets/rankings/data_hppr_1qb";
 
 @Component({
   selector: 'app-root',
@@ -22,7 +22,7 @@ export class AppComponent implements OnInit {
   constructor(private playerService: PlayerService) {}
 
   ngOnInit(): void {
-    const plainData = csvToJson(data1qb);
+    const plainData = csvToJson(dataHppr1qb);
     const initialPlayers: Player[] = plainToInstance(Player, plainData, {
       excludeExtraneousValues: true,
       enableImplicitConversion: true

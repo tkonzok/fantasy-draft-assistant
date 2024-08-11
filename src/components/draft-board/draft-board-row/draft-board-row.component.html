@@ -1,8 +1,11 @@
-<div class="draft-board-row">
+<div class="draft-board-row"
+     [ngClass]="{
+          'border-bottom': showBorderBottom,
+        }">
   <div>
     <button (click)="draft()">
       <img
-        ngSrc="../../../assets/checkmark.svg"
+        ngSrc="../../../assets/icons/checkmark.svg"
         alt="checkmark"
         height="24"
         width="24"
@@ -12,7 +15,7 @@
   <div>
     <button (click)="remove()">
       <img
-        ngSrc="../../../assets/cross.svg"
+        ngSrc="../../../assets/icons/cross.svg"
         alt="cross"
         height="24"
         width="24"

@@ -59,6 +59,11 @@
   color: #fff;
 }
 
+.red-background {
+  background-color: #700;
+  color: #fff;
+}
+
 .search-container {
   position: relative;
   display: inline-block;

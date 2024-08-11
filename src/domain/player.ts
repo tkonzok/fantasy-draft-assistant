@@ -21,6 +21,14 @@ export class Player {
 
   @Type(() => String)
   @Expose()
+  tier!: string;
+
+  @Expose()
+  @Transform(({ value }) => value ?? false)
+  isLastOfTier!: boolean;
+
+  @Type(() => String)
+  @Expose()
   name!: string;
 
   @Type(() => String)

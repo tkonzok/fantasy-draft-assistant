@@ -33,6 +33,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   protected availablePlayers: Player[] = [];
   protected filteredPlayers: Player[] = [];
   protected highlightedPlayers: Player[] = [];
+  protected showOnlyNextTiers: boolean = false;
   protected searchTerm: string = '';
   protected readonly visiblePositions: Set<string> = new Set();
   protected readonly Position = Position;
@@ -65,6 +66,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   protected togglePosition(position: Position): void {
+    this.showOnlyNextTiers = false;
     if (this.visiblePositions.has(position)) {
       this.visiblePositions.delete(position);
     } else {
@@ -73,7 +75,30 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
     this.filterPlayers();
   }
 
+  protected toggleTierView() {
+    this.visiblePositions.clear();
+    this.searchTerm = "";
+    this.showOnlyNextTiers = !this.showOnlyNextTiers;
+    this.filterPlayers();
+  }
+
   protected filterPlayers(): void {
+    if (this.showOnlyNextTiers) {
+      const currentTiers: Record<Position, string | undefined> = {
+        [Position.QB]: this.getCurrentTier(Position.QB),
+        [Position.RB]: this.getCurrentTier(Position.RB),
+        [Position.WR]: this.getCurrentTier(Position.WR),
+        [Position.TE]: this.getCurrentTier(Position.TE),
+      }
+      this.filteredPlayers = this.availablePlayers.filter((player) => {
+        const matchesPosition =
+          this.visiblePositions.size === 0 ||
+          this.visiblePositions.has(player.pos);
+        const matchesCurrentTier = player.tier === currentTiers[player.pos]
+        return matchesPosition && matchesCurrentTier && this.matchesSearchTerm(player);
+      });
+      return;
+    }
     this.filteredPlayers = this.availablePlayers.filter((player) => {
       const matchesPosition =
         this.visiblePositions.size === 0 ||
@@ -88,7 +113,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   protected clearSearch() {
-    this.searchTerm = '';
+    this.searchTerm = "";
     this.filterPlayers();
   }
 
@@ -138,5 +163,9 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
       .toLowerCase()
       .replace(/[^a-zA-Z]/g, '');
     return trimmedPlayerName.includes(trimmedSearchTerm);
+  }
+
+  private getCurrentTier(position: Position): string | undefined {
+    return this.availablePlayers.find((player) => player.pos === position)?.tier
   }
 }

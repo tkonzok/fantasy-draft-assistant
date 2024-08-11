@@ -12,6 +12,7 @@ export class PlayerService {
   constructor() {}
 
   init(players: Player[]): void {
+    this.markLastOfTier(players);
     this.playersSubject.next(players);
   }
 
@@ -33,5 +34,14 @@ export class PlayerService {
       players[playerIndex].status = PlayerStatus.NOT_AVAILABLE;
       this.playersSubject.next([...players]);
     }
+  }
+
+  private markLastOfTier(players: Player[]): void {
+    players.forEach((currentPlayer, index) => {
+      const nextPlayer = players
+        .slice(index + 1)
+        .find((next) => next.pos === currentPlayer.pos);
+      currentPlayer.isLastOfTier = !(nextPlayer?.tier === currentPlayer.tier);
+    });
   }
 }
