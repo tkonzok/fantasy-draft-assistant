@@ -1,14 +1,14 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { JsonPipe, NgClass, NgForOf, NgIf } from '@angular/common';
-import { Player, PlayerStatus } from '../../domain/player';
-import { DraftBoardRowComponent } from './draft-board-row/draft-board-row.component';
-import { PlayerService } from '../../domain/player.service';
-import { Position } from '../position/position.component';
-import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, combineLatest, Subscription, switchMap } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { JsonPipe, NgClass, NgForOf, NgIf } from "@angular/common";
+import { Player, PlayerStatus } from "../../domain/player";
+import { DraftBoardRowComponent } from "./draft-board-row/draft-board-row.component";
+import { PlayerService } from "../../domain/player.service";
+import { Position } from "../position/position.component";
+import { FormsModule } from "@angular/forms";
+import { BehaviorSubject, combineLatest, Subscription, switchMap } from "rxjs";
 
 @Component({
-  selector: 'app-draft-board',
+  selector: "app-draft-board",
   standalone: true,
   imports: [
     NgForOf,
@@ -18,8 +18,8 @@ import { BehaviorSubject, combineLatest, Subscription, switchMap } from 'rxjs';
     FormsModule,
     NgIf,
   ],
-  templateUrl: './draft-board.component.html',
-  styleUrls: ['./draft-board.component.css'],
+  templateUrl: "./draft-board.component.html",
+  styleUrls: ["./draft-board.component.css"],
 })
 export class DraftBoardComponent implements OnInit, OnDestroy {
   @Input() set draftPosition(value: number) {
@@ -36,7 +36,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   protected filteredPlayers: Player[] = [];
   protected highlightedPlayers: Player[] = [];
   protected showOnlyNextTiers: boolean = false;
-  protected searchTerm: string = '';
+  protected searchTerm: string = "";
   protected readonly visiblePositions: Set<string> = new Set();
   protected readonly Position = Position;
 
@@ -169,14 +169,14 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   private clearSearchTerm() {
-    this.searchTerm = '';
+    this.searchTerm = "";
   }
 
   private matchesSearchTerm(player: Player) {
-    let trimmedPlayerName = player.name.toLowerCase().replace(/[^a-zA-Z]/g, '');
+    let trimmedPlayerName = player.name.toLowerCase().replace(/[^a-zA-Z]/g, "");
     let trimmedSearchTerm = this.searchTerm
       .toLowerCase()
-      .replace(/[^a-zA-Z]/g, '');
+      .replace(/[^a-zA-Z]/g, "");
     return trimmedPlayerName.includes(trimmedSearchTerm);
   }
 

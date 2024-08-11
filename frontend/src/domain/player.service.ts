@@ -1,14 +1,15 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, map, tap } from 'rxjs';
-import { Player, PlayerStatus } from './player';
-import { HttpClient } from '@angular/common/http';
-import { plainToInstance } from 'class-transformer';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject, map, tap } from "rxjs";
+import { Player, PlayerStatus } from "./player";
+import { HttpClient } from "@angular/common/http";
+import { plainToInstance } from "class-transformer";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class PlayerService {
-  public static readonly PLAYER_URL: string = 'http://localhost:3000/api/players';
+  public static readonly PLAYER_URL: string =
+    "http://localhost:3000/api/players";
   private playersSubject = new BehaviorSubject<Player[]>([]);
   players$ = this.playersSubject.asObservable();
 

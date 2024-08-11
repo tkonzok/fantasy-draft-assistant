@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgClass } from '@angular/common';
-import { PlayerStatus } from '../../domain/player';
-import { PlayerService } from '../../domain/player.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { PlayerStatus } from "../../domain/player";
+import { PlayerService } from "../../domain/player.service";
 
 @Component({
-  selector: 'app-team',
-  templateUrl: './team.component.html',
-  styleUrls: ['./team.component.css'],
+  selector: "app-team",
+  templateUrl: "./team.component.html",
+  styleUrls: ["./team.component.css"],
   standalone: true,
   imports: [NgClass],
 })
@@ -28,11 +28,11 @@ export class TeamComponent implements OnInit {
   protected getBackgroundClass(): string {
     switch (this.timesTeamDrafted) {
       case 0:
-        return '';
+        return "";
       case 1:
-        return 'white-background';
+        return "white-background";
       default:
-        return 'red-background';
+        return "red-background";
     }
   }
 }

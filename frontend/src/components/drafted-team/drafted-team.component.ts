@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
-import { JsonPipe, NgForOf } from '@angular/common';
-import { DraftedTeamRowComponent } from './drafted-team-row/drafted-team-row.component';
-import { DraftBoardRowComponent } from '../draft-board/draft-board-row/draft-board-row.component';
-import { Player, PlayerStatus } from '../../domain/player';
-import { PlayerService } from '../../domain/player.service';
-import { Position } from '../position/position.component';
+import { Component, OnInit } from "@angular/core";
+import { JsonPipe, NgForOf } from "@angular/common";
+import { DraftedTeamRowComponent } from "./drafted-team-row/drafted-team-row.component";
+import { DraftBoardRowComponent } from "../draft-board/draft-board-row/draft-board-row.component";
+import { Player, PlayerStatus } from "../../domain/player";
+import { PlayerService } from "../../domain/player.service";
+import { Position } from "../position/position.component";
 
 @Component({
-  selector: 'app-drafted-team',
+  selector: "app-drafted-team",
   standalone: true,
   imports: [NgForOf, JsonPipe, DraftedTeamRowComponent, DraftBoardRowComponent],
-  templateUrl: './drafted-team.component.html',
-  styleUrl: './drafted-team.component.css',
+  templateUrl: "./drafted-team.component.html",
+  styleUrl: "./drafted-team.component.css",
 })
 export class DraftedTeamComponent implements OnInit {
   players: Player[] = [];

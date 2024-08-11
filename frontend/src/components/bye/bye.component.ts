@@ -1,12 +1,12 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { NgClass } from '@angular/common';
-import { PlayerStatus } from '../../domain/player';
-import { PlayerService } from '../../domain/player.service';
+import { Component, Input, OnInit } from "@angular/core";
+import { NgClass } from "@angular/common";
+import { PlayerStatus } from "../../domain/player";
+import { PlayerService } from "../../domain/player.service";
 
 @Component({
-  selector: 'app-bye',
-  templateUrl: './bye.component.html',
-  styleUrls: ['./bye.component.css'],
+  selector: "app-bye",
+  templateUrl: "./bye.component.html",
+  styleUrls: ["./bye.component.css"],
   standalone: true,
   imports: [NgClass],
 })
@@ -28,13 +28,13 @@ export class ByeComponent implements OnInit {
   protected getBackgroundClass(): string {
     switch (this.timesByeDrafted) {
       case 0:
-        return '';
+        return "";
       case 1:
-        return 'white-background';
+        return "white-background";
       case 2:
-        return 'orange-background';
+        return "orange-background";
       default:
-        return 'red-background';
+        return "red-background";
     }
   }
 }
