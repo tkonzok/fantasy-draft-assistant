@@ -1,6 +1,6 @@
 .draft-board-row {
   display: grid;
-  grid-template-columns: repeat(2, 32px) repeat(3, 64px) 256px repeat(2, 64px);
+  grid-template-columns: repeat(2, 32px) repeat(3, 64px) 256px repeat(2, 72px);
   align-items: center;
   height: 40px;
   padding: 8px 0;

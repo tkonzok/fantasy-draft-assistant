@@ -72,7 +72,7 @@
         [player]="player"
         [showBorderBottom]="visiblePositions.size === 1 && player.isLastOfTier"
         [ngClass]="{
-          highlighted: highlightedPlayers.includes(player),
+          highlighted: highlightedPlayers.includes(player) && !showOnlyNextTiers,
         }"
       >
       </app-draft-board-row>

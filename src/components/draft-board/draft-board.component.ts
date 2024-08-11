@@ -5,7 +5,7 @@ import { DraftBoardRowComponent } from './draft-board-row/draft-board-row.compon
 import { PlayerService } from '../../domain/player.service';
 import { Position } from '../position/position.component';
 import { FormsModule } from '@angular/forms';
-import {BehaviorSubject, combineLatest, Subscription, switchMap} from 'rxjs';
+import { BehaviorSubject, combineLatest, Subscription, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-draft-board',
@@ -27,7 +27,9 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
     this.pickPositionsSubject.next(pickPositions);
   }
 
-  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(this.getPickPositions(1));
+  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<
+    number[]
+  >(this.getPickPositions(1));
   private subscriptions: Subscription = new Subscription();
   private totalPlayers: Player[] = [];
   protected availablePlayers: Player[] = [];
@@ -47,17 +49,19 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
     ]);
 
     this.subscriptions.add(
-      combined$.pipe(
-        switchMap(([pickPositions, players]) => {
-          this.totalPlayers = players;
-          this.availablePlayers = players.filter(
-            (player) => player.status === PlayerStatus.AVAILABLE
-          );
-          this.updateHighlightedPlayers(pickPositions);
-          this.filterPlayers();
-          return [];
-        })
-      ).subscribe()
+      combined$
+        .pipe(
+          switchMap(([pickPositions, players]) => {
+            this.totalPlayers = players;
+            this.availablePlayers = players.filter(
+              (player) => player.status === PlayerStatus.AVAILABLE,
+            );
+            this.updateHighlightedPlayers(pickPositions);
+            this.filterPlayers();
+            return [];
+          }),
+        )
+        .subscribe(),
     );
   }
 
@@ -77,7 +81,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
 
   protected toggleTierView() {
     this.visiblePositions.clear();
-    this.searchTerm = "";
+    this.clearSearchTerm();
     this.showOnlyNextTiers = !this.showOnlyNextTiers;
     this.filterPlayers();
   }
@@ -89,13 +93,17 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
         [Position.RB]: this.getCurrentTier(Position.RB),
         [Position.WR]: this.getCurrentTier(Position.WR),
         [Position.TE]: this.getCurrentTier(Position.TE),
-      }
+      };
       this.filteredPlayers = this.availablePlayers.filter((player) => {
         const matchesPosition =
           this.visiblePositions.size === 0 ||
           this.visiblePositions.has(player.pos);
-        const matchesCurrentTier = player.tier === currentTiers[player.pos]
-        return matchesPosition && matchesCurrentTier && this.matchesSearchTerm(player);
+        const matchesCurrentTier = player.tier === currentTiers[player.pos];
+        return (
+          matchesPosition &&
+          matchesCurrentTier &&
+          this.matchesSearchTerm(player)
+        );
       });
       return;
     }
@@ -108,12 +116,14 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   protected showAll() {
+    this.showOnlyNextTiers = false;
     this.visiblePositions.clear();
+    this.clearSearchTerm();
     this.filterPlayers();
   }
 
   protected clearSearch() {
-    this.searchTerm = "";
+    this.clearSearchTerm();
     this.filterPlayers();
   }
 
@@ -129,7 +139,8 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
     availablePlayers: Player[],
     pickPositions: number[],
   ) {
-    const numberOfTakenPlayers: number = this.totalPlayers.length - availablePlayers.length;
+    const numberOfTakenPlayers: number =
+      this.totalPlayers.length - availablePlayers.length;
     const currentPick: number = numberOfTakenPlayers + 1;
     return availablePlayers.filter((player: Player, index: number) =>
       pickPositions.some(
@@ -157,6 +168,10 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
     return picks;
   }
 
+  private clearSearchTerm() {
+    this.searchTerm = "";
+  }
+
   private matchesSearchTerm(player: Player) {
     let trimmedPlayerName = player.name.toLowerCase().replace(/[^a-zA-Z]/g, '');
     let trimmedSearchTerm = this.searchTerm
@@ -166,6 +181,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   private getCurrentTier(position: Position): string | undefined {
-    return this.availablePlayers.find((player) => player.pos === position)?.tier
+    return this.availablePlayers.find((player) => player.pos === position)
+      ?.tier;
   }
 }

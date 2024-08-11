@@ -9,7 +9,7 @@
 
 .grid-header {
   display: grid;
-  grid-template-columns: repeat(3, 64px) 256px repeat(2, 64px);
+  grid-template-columns: repeat(3, 64px) 256px repeat(2, 72px);
   font-weight: bold;
 }
 
@@ -26,5 +26,5 @@
 
 .grid-row {
   display: grid;
-  grid-template-columns: 1fr; /* Ensures each row spans all columns */
+  grid-template-columns: 1fr;
 }
