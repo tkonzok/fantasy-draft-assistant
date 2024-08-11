@@ -169,7 +169,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   private clearSearchTerm() {
-    this.searchTerm = "";
+    this.searchTerm = '';
   }
 
   private matchesSearchTerm(player: Player) {

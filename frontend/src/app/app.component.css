@@ -8,7 +8,8 @@
   height: calc(100vh - 32px);
 }
 
-app-drafted-team, app-draft-board {
+app-drafted-team,
+app-draft-board {
   display: block;
   max-height: calc(100vh - 64px);
 }

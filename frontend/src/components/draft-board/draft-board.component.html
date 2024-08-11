@@ -38,7 +38,9 @@
       [ngClass]="{
         'red-background': showOnlyNextTiers,
       }"
-    >TIER</button>
+    >
+      TIER
+    </button>
   </div>
   <div class="search-container">
     <input
@@ -72,7 +74,8 @@
         [player]="player"
         [showBorderBottom]="visiblePositions.size === 1 && player.isLastOfTier"
         [ngClass]="{
-          highlighted: highlightedPlayers.includes(player) && !showOnlyNextTiers,
+          highlighted:
+            highlightedPlayers.includes(player) && !showOnlyNextTiers,
         }"
       >
       </app-draft-board-row>

@@ -1,5 +1,5 @@
-import {Expose, Transform, Type} from 'class-transformer';
-import {Position} from "../components/position/position.component";
+import { Expose, Transform, Type } from 'class-transformer';
+import { Position } from '../components/position/position.component';
 
 export enum PlayerStatus {
   AVAILABLE,

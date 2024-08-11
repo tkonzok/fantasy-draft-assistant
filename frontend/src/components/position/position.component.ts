@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import {NgClass} from "@angular/common";
+import { NgClass } from '@angular/common';
 
 export enum Position {
   QB = 'QB',
@@ -16,7 +16,7 @@ export enum Position {
   imports: [NgClass],
 })
 export class PositionComponent {
-  @Input({required: true}) pos!: Position;
+  @Input({ required: true }) pos!: Position;
 
   protected getBackgroundClass(): string {
     switch (this.pos) {

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Player } from '../../../domain/player';
-import {NgClass, NgOptimizedImage} from '@angular/common';
+import { NgClass, NgOptimizedImage } from '@angular/common';
 import { PlayerService } from '../../../domain/player.service';
-import {PositionComponent} from "../../position/position.component";
-import {TeamComponent} from "../../team/team.component";
-import {ByeComponent} from "../../bye/bye.component";
+import { PositionComponent } from '../../position/position.component';
+import { TeamComponent } from '../../team/team.component';
+import { ByeComponent } from '../../bye/bye.component';
 
 @Component({
   selector: 'app-draft-board-row',

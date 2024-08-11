@@ -11,7 +11,7 @@ import { PlayerService } from '../../domain/player.service';
   imports: [NgClass],
 })
 export class TeamComponent implements OnInit {
-  @Input({required: true}) team!: string;
+  @Input({ required: true }) team!: string;
   private timesTeamDrafted: number = 0;
 
   constructor(private playerService: PlayerService) {}
