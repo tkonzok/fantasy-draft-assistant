@@ -14,4 +14,5 @@ import { TeamComponent } from "../../team/team.component";
 })
 export class DraftedTeamRowComponent {
   @Input({ required: true }) player!: Player;
+  @Input() setting: string = "hppr1qb";
 }

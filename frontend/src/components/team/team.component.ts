@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { NgClass } from "@angular/common";
-import { PlayerStatus } from "../../domain/player";
 import { PlayerService } from "../../domain/player.service";
+import { PlayerStatus } from "../../domain/player";
 
 @Component({
   selector: "app-team",

@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, map, tap } from "rxjs";
+import { BehaviorSubject, combineLatest, map, switchMap, tap } from "rxjs";
 import { Player, PlayerStatus } from "./player";
 import { HttpClient } from "@angular/common/http";
 import { plainToInstance } from "class-transformer";
+import { SettingsService } from "./settings.service";
 
 @Injectable({
   providedIn: "root",
@@ -13,17 +14,25 @@ export class PlayerService {
   private playersSubject = new BehaviorSubject<Player[]>([]);
   players$ = this.playersSubject.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private settingsService: SettingsService,
+  ) {}
 
   init(): void {
-    this.http
-      .get<Player[]>(PlayerService.PLAYER_URL)
+    this.settingsService.selectedSetting$
       .pipe(
-        map((value) => plainToInstance(Player, value)),
-        tap((players: Player[]) => {
-          this.markLastOfTier(players);
-          this.playersSubject.next(players);
-        }),
+        switchMap((setting) =>
+          this.http.get<Player[]>(PlayerService.PLAYER_URL).pipe(
+            map((players) => plainToInstance(Player, players)),
+            map((players) => this.filterPlayers(players, setting)),
+            map((players) => this.sortPlayers(players, setting)),
+            tap((players) => {
+              this.markLastOfTier(players, setting);
+              this.playersSubject.next(players);
+            }),
+          ),
+        ),
       )
       .subscribe();
   }
@@ -48,12 +57,29 @@ export class PlayerService {
     }
   }
 
-  private markLastOfTier(players: Player[]): void {
+  private filterPlayers(players: Player[], setting: string): Player[] {
+    return players.filter(
+      (player: Player) => player.rankings && player.rankings[setting],
+    );
+  }
+
+  private sortPlayers(players: Player[], setting: string): Player[] {
+    return players.sort((a: Player, b: Player) => {
+      const aValue = Number(a.rankings[setting]?.ovr) ?? 0;
+      const bValue = Number(b.rankings[setting]?.ovr) ?? 0;
+      return aValue - bValue;
+    });
+  }
+
+  private markLastOfTier(players: Player[], setting: string): void {
     players.forEach((currentPlayer, index) => {
       const nextPlayer = players
         .slice(index + 1)
         .find((next) => next.pos === currentPlayer.pos);
-      currentPlayer.isLastOfTier = !(nextPlayer?.tier === currentPlayer.tier);
+      currentPlayer.rankings[setting].isLastOfTier = !(
+        nextPlayer?.rankings[setting]?.tier ===
+        currentPlayer.rankings[setting]?.tier
+      );
     });
   }
 }

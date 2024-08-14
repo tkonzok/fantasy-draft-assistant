@@ -8,38 +8,41 @@ export enum PlayerStatus {
 }
 
 export class Player {
-  @Type(() => String)
   @Expose()
-  ovr!: string;
+  id!: string;
 
   @Expose()
   pos!: Position;
 
-  @Type(() => String)
-  @Expose()
-  rank!: string;
-
-  @Type(() => String)
-  @Expose()
-  tier!: string;
-
-  @Expose()
-  @Transform(({ value }) => value ?? false)
-  isLastOfTier!: boolean;
-
-  @Type(() => String)
   @Expose()
   name!: string;
 
-  @Type(() => String)
   @Expose()
   team!: string;
 
-  @Type(() => String)
   @Expose()
   bye!: string;
 
   @Expose()
   @Transform(({ value }) => value ?? PlayerStatus.AVAILABLE)
   status!: PlayerStatus;
+
+  @Expose()
+  @Transform(({ value }) => value || {})
+  rankings!: Record<string, RankingDetails>;
+}
+
+export class RankingDetails {
+  @Expose()
+  ovr!: string;
+
+  @Expose()
+  rank!: string;
+
+  @Expose()
+  tier!: string;
+
+  @Expose()
+  @Transform(({ value }) => value ?? false)
+  isLastOfTier!: boolean;
 }

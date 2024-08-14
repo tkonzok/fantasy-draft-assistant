@@ -6,6 +6,7 @@ import { PlayerService } from "../../domain/player.service";
 import { Position } from "../position/position.component";
 import { FormsModule } from "@angular/forms";
 import { BehaviorSubject, combineLatest, Subscription, switchMap } from "rxjs";
+import { SettingsService } from "../../domain/settings.service";
 
 @Component({
   selector: "app-draft-board",
@@ -22,46 +23,54 @@ import { BehaviorSubject, combineLatest, Subscription, switchMap } from "rxjs";
   styleUrls: ["./draft-board.component.css"],
 })
 export class DraftBoardComponent implements OnInit, OnDestroy {
-  @Input() set draftPosition(value: number) {
-    const pickPositions: number[] = this.getPickPositions(value);
+  @Input() set draftPosition(value: Record<string, number>) {
+    const pickPositions: number[] = this.getPickPositions(
+      value["draftPosition"],
+      value["totalDraftPositions"],
+    );
     this.pickPositionsSubject.next(pickPositions);
   }
 
-  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<
-    number[]
-  >(this.getPickPositions(1));
-  private subscriptions: Subscription = new Subscription();
-  private totalPlayers: Player[] = [];
   protected availablePlayers: Player[] = [];
   protected filteredPlayers: Player[] = [];
   protected highlightedPlayers: Player[] = [];
   protected showOnlyNextTiers: boolean = false;
   protected searchTerm: string = "";
+  protected setting: string = "";
   protected readonly visiblePositions: Set<string> = new Set();
   protected readonly Position = Position;
 
-  constructor(private playerService: PlayerService) {}
+  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<
+    number[]
+  >(this.getPickPositions(1, 12));
+  private subscriptions: Subscription = new Subscription();
+  private totalPlayers: Player[] = [];
+
+  constructor(
+    private playerService: PlayerService,
+    private settingsService: SettingsService,
+  ) {}
 
   ngOnInit(): void {
-    const combined$ = combineLatest([
-      this.pickPositionsSubject,
-      this.playerService.players$,
-    ]);
+    this.subscriptions.add(
+      this.settingsService.selectedSetting$.subscribe((setting) => {
+        this.setting = setting;
+        this.filterPlayers();
+      }),
+    );
 
     this.subscriptions.add(
-      combined$
-        .pipe(
-          switchMap(([pickPositions, players]) => {
-            this.totalPlayers = players;
-            this.availablePlayers = players.filter(
-              (player) => player.status === PlayerStatus.AVAILABLE,
-            );
-            this.updateHighlightedPlayers(pickPositions);
-            this.filterPlayers();
-            return [];
-          }),
-        )
-        .subscribe(),
+      combineLatest([
+        this.pickPositionsSubject,
+        this.playerService.players$,
+      ]).subscribe(([pickPositions, players]) => {
+        this.totalPlayers = players;
+        this.availablePlayers = players.filter(
+          (player) => player.status === PlayerStatus.AVAILABLE,
+        );
+        this.updateHighlightedPlayers(pickPositions);
+        this.filterPlayers(); // Ensure players are filtered on init
+      }),
     );
   }
 
@@ -87,6 +96,9 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   protected filterPlayers(): void {
+    if (!this.setting) {
+      return;
+    }
     if (this.showOnlyNextTiers) {
       const currentTiers: Record<Position, string | undefined> = {
         [Position.QB]: this.getCurrentTier(Position.QB),
@@ -98,7 +110,8 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
         const matchesPosition =
           this.visiblePositions.size === 0 ||
           this.visiblePositions.has(player.pos);
-        const matchesCurrentTier = player.tier === currentTiers[player.pos];
+        const matchesCurrentTier =
+          player.rankings[this.setting].tier === currentTiers[player.pos];
         return (
           matchesPosition &&
           matchesCurrentTier &&
@@ -151,7 +164,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
 
   private getPickPositions(
     draftPosition: number,
-    totalTeams: number = 12,
+    totalTeams: number,
     totalRounds: number = 20,
   ): number[] {
     const picks: number[] = [];
@@ -182,6 +195,6 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
 
   private getCurrentTier(position: Position): string | undefined {
     return this.availablePlayers.find((player) => player.pos === position)
-      ?.tier;
+      ?.rankings[this.setting].tier;
   }
 }

@@ -18,7 +18,8 @@ app-draft-board {
   font-size: 18px;
 }
 
-.draft-position-wrapper {
+.draft-position-wrapper,
+.settings-wrapper {
   display: flex;
   align-items: center;
 }
@@ -38,6 +39,26 @@ app-draft-board {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.select-setting-btn {
+  height: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: transparent;
+  color: white;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 0 5px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.select-setting-btn.selected {
+  color: red;
 }
 
 .draft-position-control-btn:disabled {

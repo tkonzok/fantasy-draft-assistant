@@ -72,7 +72,10 @@
     <div *ngFor="let player of filteredPlayers" class="grid-row">
       <app-draft-board-row
         [player]="player"
-        [showBorderBottom]="visiblePositions.size === 1 && player.isLastOfTier"
+        [showBorderBottom]="
+          visiblePositions.size === 1 &&
+          player.rankings[this.setting].isLastOfTier
+        "
         [ngClass]="{
           highlighted:
             highlightedPlayers.includes(player) && !showOnlyNextTiers,

@@ -10,7 +10,10 @@
 
   <div class="grid-row-wrapper">
     <div *ngFor="let player of players" class="grid-row">
-      <app-drafted-team-row [player]="player"></app-drafted-team-row>
+      <app-drafted-team-row
+        [player]="player"
+        [setting]="selectedSetting"
+      ></app-drafted-team-row>
     </div>
   </div>
 </div>

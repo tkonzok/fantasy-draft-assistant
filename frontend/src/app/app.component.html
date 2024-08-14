@@ -17,11 +17,36 @@
       >
         +
       </button>
+      <span class="draft-position-label">of </span>
+      <button
+        (click)="decrementTotalDraftPositions()"
+        [disabled]="totalDraftPositions <= 1"
+        class="draft-position-control-btn"
+      >
+        −
+      </button>
+      <span class="draft-position-display">{{ totalDraftPositions }}</span>
+      <button
+        (click)="incrementTotalDraftPositions()"
+        class="draft-position-control-btn"
+      >
+        +
+      </button>
+    </div>
+    <div class="settings-wrapper">
+      <button
+        *ngFor="let setting of availableSettings"
+        (click)="selectSetting(setting)"
+        [ngClass]="{ selected: selectedSetting === setting }"
+        class="select-setting-btn"
+      >
+        {{ setting }}
+      </button>
     </div>
     <app-drafted-team></app-drafted-team>
   </div>
   <app-draft-board
     class="mt-16"
-    [draftPosition]="draftPosition"
+    [draftPosition]="{ draftPosition, totalDraftPositions }"
   ></app-draft-board>
 </div>
