@@ -7,6 +7,7 @@ import { PlayerService } from "../../domain/player.service";
 import { Position } from "../position/position.component";
 import { SettingsService } from "../../domain/settings.service";
 import { combineLatest, Subscription, switchMap } from "rxjs";
+import {DraftService} from "../../domain/draft.service";
 
 @Component({
   selector: "app-drafted-team",
@@ -23,6 +24,7 @@ export class DraftedTeamComponent implements OnInit, OnDestroy {
   constructor(
     private playerService: PlayerService,
     private settingsService: SettingsService,
+    private draftService: DraftService,
   ) {}
 
   ngOnInit(): void {
@@ -30,28 +32,27 @@ export class DraftedTeamComponent implements OnInit, OnDestroy {
       combineLatest([
         this.playerService.players$,
         this.settingsService.selectedSetting$,
+        this.draftService.selectedDraft$,
       ])
-        .pipe(
-          switchMap(([players, setting]) => {
-            this.selectedSetting = setting as string;
-            return [players];
-          }),
-        )
-        .subscribe((players) => {
-          this.players = players
-            .filter((player) => player.status === PlayerStatus.DRAFTED)
-            .sort((a, b) => {
-              const positionOrder: Record<Position, number> = {
-                [Position.QB]: 1,
-                [Position.RB]: 2,
-                [Position.WR]: 3,
-                [Position.TE]: 4,
-              };
-              return (positionOrder[a.pos] || 0) - (positionOrder[b.pos] || 0);
-            });
+        .subscribe(([players, setting, draft]) => {
+          this.selectedSetting = setting as string;
+          this.players = draft
+            ? players
+              .filter((player) => draft.playerStates?.[player.id] === PlayerStatus.DRAFTED)
+              .sort((a, b) => {
+                const positionOrder: Record<Position, number> = {
+                  [Position.QB]: 1,
+                  [Position.RB]: 2,
+                  [Position.WR]: 3,
+                  [Position.TE]: 4,
+                };
+                return (positionOrder[a.pos] || 0) - (positionOrder[b.pos] || 0);
+              })
+            : [];
         }),
     );
   }
+
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

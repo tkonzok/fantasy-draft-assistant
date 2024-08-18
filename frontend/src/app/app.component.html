@@ -16,7 +16,6 @@
       </button>
       <span>Draft:</span>
       <select [(ngModel)]="selectedDraftId" (ngModelChange)="selectDraft($event)" class="select-dropdown">
-        <option value="" disabled>none</option>
         <option *ngFor="let draft of availableDrafts" [value]="draft.id">
           {{ draft.name }}
         </option>

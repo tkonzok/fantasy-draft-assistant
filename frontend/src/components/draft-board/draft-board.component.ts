@@ -1,33 +1,25 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { JsonPipe, NgClass, NgForOf, NgIf } from "@angular/common";
-import { Player, PlayerStatus } from "../../domain/player";
-import { DraftBoardRowComponent } from "./draft-board-row/draft-board-row.component";
-import { PlayerService } from "../../domain/player.service";
-import { Position } from "../position/position.component";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { BehaviorSubject, combineLatest, Subscription, switchMap } from "rxjs";
+import { BehaviorSubject, Subscription, combineLatest } from "rxjs";
+import { Player, PlayerStatus } from "../../domain/player";
+import { PlayerService } from "../../domain/player.service";
 import { SettingsService } from "../../domain/settings.service";
+import { Position } from "../position/position.component";
+import { DraftBoardRowComponent } from "./draft-board-row/draft-board-row.component";
+import {DraftService} from "../../domain/draft.service";
 
 @Component({
   selector: "app-draft-board",
   standalone: true,
-  imports: [
-    NgForOf,
-    JsonPipe,
-    DraftBoardRowComponent,
-    NgClass,
-    FormsModule,
-    NgIf,
-  ],
+  imports: [NgForOf, JsonPipe, DraftBoardRowComponent, NgClass, FormsModule, NgIf],
   templateUrl: "./draft-board.component.html",
   styleUrls: ["./draft-board.component.css"],
 })
 export class DraftBoardComponent implements OnInit, OnDestroy {
   @Input() set draftPosition(value: Record<string, number>) {
-    const pickPositions: number[] = this.getPickPositions(
-      value["draftPosition"],
-      value["totalDraftPositions"],
-    );
+    const pickPositions: number[] = this.getPickPositions(value["draftPosition"], value["totalDraftPositions"]);
+    this.totalDraftPositions = value["totalDraftPositions"];
     this.pickPositionsSubject.next(pickPositions);
   }
 
@@ -37,18 +29,19 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   protected showOnlyNextTiers: boolean = false;
   protected searchTerm: string = "";
   protected settings: string = "";
+  protected currentPick: string = "1";
   protected readonly visiblePositions: Set<string> = new Set();
   protected readonly Position = Position;
 
-  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<
-    number[]
-  >(this.getPickPositions(1, 12));
+  private pickPositionsSubject: BehaviorSubject<number[]> = new BehaviorSubject<number[]>(this.getPickPositions(1, 12));
   private subscriptions: Subscription = new Subscription();
   private totalPlayers: Player[] = [];
+  private totalDraftPositions: number = 12;
 
   constructor(
     private playerService: PlayerService,
     private settingsService: SettingsService,
+    private draftService: DraftService,
   ) {}
 
   ngOnInit(): void {
@@ -60,16 +53,17 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
     );
 
     this.subscriptions.add(
-      combineLatest([
-        this.pickPositionsSubject,
-        this.playerService.players$,
-      ]).subscribe(([pickPositions, players]) => {
+      combineLatest([this.pickPositionsSubject, this.playerService.players$, this.draftService.selectedDraft$]).subscribe(([pickPositions, players, draft]) => {
         this.totalPlayers = players;
-        this.availablePlayers = players.filter(
-          (player) => player.status === PlayerStatus.AVAILABLE,
-        );
+        this.availablePlayers = draft
+          ? players.filter((player) => {
+            const status = draft.playerStates?.[player.id];
+            return status === PlayerStatus.AVAILABLE;
+          })
+          : this.totalPlayers;
         this.updateHighlightedPlayers(pickPositions);
-        this.filterPlayers(); // Ensure players are filtered on init
+        this.updateCurrentPick();
+        this.filterPlayers();
       }),
     );
   }
@@ -110,16 +104,9 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
         if (!player.rankings[this.settings]?.ovr) {
           return false;
         }
-        const matchesPosition =
-          this.visiblePositions.size === 0 ||
-          this.visiblePositions.has(player.pos);
-        const matchesCurrentTier =
-          player.rankings[this.settings].tier === currentTiers[player.pos];
-        return (
-          matchesPosition &&
-          matchesCurrentTier &&
-          this.matchesSearchTerm(player)
-        );
+        const matchesPosition = this.visiblePositions.size === 0 || this.visiblePositions.has(player.pos);
+        const matchesCurrentTier = player.rankings[this.settings].tier === currentTiers[player.pos];
+        return matchesPosition && matchesCurrentTier && this.matchesSearchTerm(player);
       });
       return;
     }
@@ -127,9 +114,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
       if (!player.rankings[this.settings]?.ovr) {
         return false;
       }
-      const matchesPosition =
-        this.visiblePositions.size === 0 ||
-        this.visiblePositions.has(player.pos);
+      const matchesPosition = this.visiblePositions.size === 0 || this.visiblePositions.has(player.pos);
       return matchesPosition && this.matchesSearchTerm(player);
     });
   }
@@ -147,39 +132,23 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   private updateHighlightedPlayers(pickPositions: number[]): void {
-    this.highlightedPlayers = this.determineHighlightedPlayers(
-      this.availablePlayers,
-      pickPositions,
-    );
+    this.highlightedPlayers = this.determineHighlightedPlayers(this.availablePlayers, pickPositions);
     this.filterPlayers();
   }
 
-  private determineHighlightedPlayers(
-    availablePlayers: Player[],
-    pickPositions: number[],
-  ) {
-    const numberOfTakenPlayers: number =
-      this.totalPlayers.length - availablePlayers.length;
+  private determineHighlightedPlayers(availablePlayers: Player[], pickPositions: number[]) {
+    const numberOfTakenPlayers: number = this.totalPlayers.length - availablePlayers.length;
     const currentPick: number = numberOfTakenPlayers + 1;
     return availablePlayers.filter((player: Player, index: number) =>
-      pickPositions.some(
-        (pickPosition) => pickPosition - currentPick === index,
-      ),
+      pickPositions.some((pickPosition) => pickPosition - currentPick === index),
     );
   }
 
-  private getPickPositions(
-    draftPosition: number,
-    totalTeams: number,
-    totalRounds: number = 20,
-  ): number[] {
+  private getPickPositions(draftPosition: number, totalTeams: number, totalRounds: number = 20): number[] {
     const picks: number[] = [];
 
     for (let round = 1; round <= totalRounds; round++) {
-      const pickInRound =
-        round % 2 === 1
-          ? (round - 1) * totalTeams + draftPosition
-          : round * totalTeams - draftPosition + 1;
+      const pickInRound = round % 2 === 1 ? (round - 1) * totalTeams + draftPosition : round * totalTeams - draftPosition + 1;
 
       picks.push(pickInRound);
     }
@@ -193,14 +162,19 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
 
   private matchesSearchTerm(player: Player) {
     let trimmedPlayerName = player.name.toLowerCase().replace(/[^a-zA-Z]/g, "");
-    let trimmedSearchTerm = this.searchTerm
-      .toLowerCase()
-      .replace(/[^a-zA-Z]/g, "");
+    let trimmedSearchTerm = this.searchTerm.toLowerCase().replace(/[^a-zA-Z]/g, "");
     return trimmedPlayerName.includes(trimmedSearchTerm);
   }
 
   private getCurrentTier(position: Position): string | undefined {
-    return this.availablePlayers.find((player) => player.pos === position)
-      ?.rankings[this.settings].tier;
+    return this.availablePlayers.find((player) => player.pos === position)?.rankings[this.settings].tier;
+  }
+
+  private updateCurrentPick() {
+    const numberOfDraftedPlayers = this.totalPlayers.length - this.availablePlayers.length;
+    const currentPick = numberOfDraftedPlayers + 1;
+    const round = Math.ceil(currentPick / this.totalDraftPositions);
+    const pick = ((currentPick - 1) % this.totalDraftPositions) + 1;
+    this.currentPick = `${round}.${pick}`;
   }
 }

@@ -102,7 +102,10 @@ export class AppComponent implements OnInit {
   }
 
   protected reset() {
-    this.draftService.reset(this.selectedDraftId);
+    if (!this.selectedDraft) {
+      location.reload();
+    }
+    this.draftService.reset(this.selectedDraft!.id);
   }
 
   protected delete() {

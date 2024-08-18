@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, combineLatest, map, switchMap, tap } from "rxjs";
+import {BehaviorSubject, combineLatest, map, of, switchMap, tap} from "rxjs";
 import { Player, PlayerStatus } from "./player";
 import { HttpClient } from "@angular/common/http";
 import { plainToInstance } from "class-transformer";
 import { SettingsService } from "./settings.service";
+import {Draft} from "./draft";
+import {DraftService} from "./draft.service";
 
 @Injectable({
   providedIn: "root",
@@ -17,6 +19,7 @@ export class PlayerService {
   constructor(
     private http: HttpClient,
     private settingsService: SettingsService,
+    private draftService: DraftService,
   ) {}
 
   init(): void {
@@ -38,23 +41,25 @@ export class PlayerService {
   }
 
   draft(player: Player): void {
-    const players = this.playersSubject.getValue();
-    const playerIndex = players.findIndex((p) => p.name === player.name);
-
-    if (playerIndex !== -1) {
-      players[playerIndex].status = PlayerStatus.DRAFTED;
-      this.playersSubject.next([...players]);
-    }
+    this.draftService.updatePlayerStatus(player.id, PlayerStatus.DRAFTED)
+    // const players = this.playersSubject.getValue();
+    // const playerIndex = players.findIndex((p) => p.name === player.name);
+    //
+    // if (playerIndex !== -1) {
+    //   players[playerIndex].status = PlayerStatus.DRAFTED;
+    //   this.playersSubject.next([...players]);
+    // }
   }
 
   remove(player: Player): void {
-    const players = this.playersSubject.getValue();
-    const playerIndex = players.findIndex((p) => p.name === player.name);
-
-    if (playerIndex !== -1) {
-      players[playerIndex].status = PlayerStatus.NOT_AVAILABLE;
-      this.playersSubject.next([...players]);
-    }
+    // const players = this.playersSubject.getValue();
+    // const playerIndex = players.findIndex((p) => p.name === player.name);
+    //
+    // if (playerIndex !== -1) {
+    //   players[playerIndex].status = PlayerStatus.NOT_AVAILABLE;
+    //   this.playersSubject.next([...players]);
+    // }
+    this.draftService.updatePlayerStatus(player.id, PlayerStatus.NOT_AVAILABLE)
   }
 
   private filterPlayers(players: Player[], setting: string): Player[] {

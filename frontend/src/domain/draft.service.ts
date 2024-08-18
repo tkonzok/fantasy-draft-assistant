@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { plainToInstance } from "class-transformer";
 import { BehaviorSubject, of, switchMap, tap } from "rxjs";
 import { Draft } from "./draft";
+import {PlayerStatus} from "./player";
 
 @Injectable({
   providedIn: "root",
@@ -42,17 +43,15 @@ export class DraftService {
 
   updatePosition(id: string, draftPosition: string) {
     const body = { draftPosition };
-    return this.http
-      .put<Draft>(`${DraftService.DRAFTS_URL}/${id}`, body)
-      .pipe(
-        switchMap(() => this.http.get<Draft[]>(DraftService.DRAFTS_URL)),
-        switchMap((drafts) => of(plainToInstance(Draft, drafts))),
-        tap((drafts) => {
-          this.draftsSubject.next(drafts);
-          console.log(`Draft ${id} updated and drafts refreshed:`, drafts);
-        }),
-      )
-      .subscribe();
+    return this.callUpdate(id, body);
+  }
+
+  updatePlayerStatus(id: string, playerStatus: PlayerStatus) {
+    if (!this.selectedDraftSubject) {
+      return;
+    }
+    const body = { playerStates: { [id]: playerStatus } };
+    return this.callUpdate(this.selectedDraftSubject.getValue()!.id, body)
   }
 
   reset(id: string) {
@@ -80,6 +79,28 @@ export class DraftService {
       .pipe(
         switchMap((drafts) => of(plainToInstance(Draft, drafts))),
         tap((drafts) => this.draftsSubject.next(drafts)),
+      )
+      .subscribe();
+  }
+
+  private callUpdate(id: string, body: {}) {
+    return this.http
+      .put<Draft>(`${DraftService.DRAFTS_URL}/${id}`, body)
+      .pipe(
+        switchMap(() => this.http.get<Draft[]>(DraftService.DRAFTS_URL)),
+        switchMap((drafts) => of(plainToInstance(Draft, drafts))),
+        tap((drafts) => {
+          const selectedDraftId = this.selectedDraftSubject.getValue()?.id
+          this.draftsSubject.next(drafts);
+          if (!selectedDraftId) {
+            return
+          }
+          const selectedDraft = this.draftsSubject.getValue().find((draft) => draft.id === selectedDraftId)
+          if (!selectedDraft) {
+            return;
+          }
+          this.selectedDraftSubject.next(selectedDraft)
+        }),
       )
       .subscribe();
   }
