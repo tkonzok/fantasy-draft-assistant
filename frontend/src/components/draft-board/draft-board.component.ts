@@ -146,13 +146,14 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
 
   private getPickPositions(draftPosition: number, totalTeams: number, totalRounds: number = 20): number[] {
     const picks: number[] = [];
-
+    draftPosition = Number(draftPosition);
     for (let round = 1; round <= totalRounds; round++) {
-      const pickInRound = round % 2 === 1 ? (round - 1) * totalTeams + draftPosition : round * totalTeams - draftPosition + 1;
-
-      picks.push(pickInRound);
+      round = Number(round);
+      const pickInRound = (round % 2 === 1)
+        ? (round - 1) * totalTeams + draftPosition
+        : (round * totalTeams - draftPosition + 1);
+      picks.push(Number(pickInRound));
     }
-
     return picks;
   }
 
