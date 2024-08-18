@@ -5,7 +5,12 @@ import { BehaviorSubject, Observable } from "rxjs";
   providedIn: "root",
 })
 export class SettingsService {
-  private readonly SETTINGS: string[] = ["hppr1qb", "hpprSf"];
+  private readonly SETTINGS: string[] = [
+    "hppr1qb",
+    "ppr1qb",
+    "hpprSf",
+    "upsidebowl1qb",
+  ];
   private selectedSettingSubject: BehaviorSubject<string> =
     new BehaviorSubject<string>(this.SETTINGS[0]);
 
