@@ -36,7 +36,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   protected highlightedPlayers: Player[] = [];
   protected showOnlyNextTiers: boolean = false;
   protected searchTerm: string = "";
-  protected setting: string = "";
+  protected settings: string = "";
   protected readonly visiblePositions: Set<string> = new Set();
   protected readonly Position = Position;
 
@@ -54,7 +54,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscriptions.add(
       this.settingsService.selectedSetting$.subscribe((setting) => {
-        this.setting = setting;
+        this.settings = setting;
         this.filterPlayers();
       }),
     );
@@ -96,7 +96,7 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
   }
 
   protected filterPlayers(): void {
-    if (!this.setting) {
+    if (!this.settings) {
       return;
     }
     if (this.showOnlyNextTiers) {
@@ -107,11 +107,14 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
         [Position.TE]: this.getCurrentTier(Position.TE),
       };
       this.filteredPlayers = this.availablePlayers.filter((player) => {
+        if (!player.rankings[this.settings]?.ovr) {
+          return false;
+        }
         const matchesPosition =
           this.visiblePositions.size === 0 ||
           this.visiblePositions.has(player.pos);
         const matchesCurrentTier =
-          player.rankings[this.setting].tier === currentTiers[player.pos];
+          player.rankings[this.settings].tier === currentTiers[player.pos];
         return (
           matchesPosition &&
           matchesCurrentTier &&
@@ -121,6 +124,9 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
       return;
     }
     this.filteredPlayers = this.availablePlayers.filter((player) => {
+      if (!player.rankings[this.settings]?.ovr) {
+        return false;
+      }
       const matchesPosition =
         this.visiblePositions.size === 0 ||
         this.visiblePositions.has(player.pos);
@@ -195,6 +201,6 @@ export class DraftBoardComponent implements OnInit, OnDestroy {
 
   private getCurrentTier(position: Position): string | undefined {
     return this.availablePlayers.find((player) => player.pos === position)
-      ?.rankings[this.setting].tier;
+      ?.rankings[this.settings].tier;
   }
 }

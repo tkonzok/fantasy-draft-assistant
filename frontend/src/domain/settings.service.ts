@@ -22,11 +22,7 @@ export class SettingsService {
     return this.selectedSettingSubject.asObservable();
   }
 
-  get selectedSetting(): string {
-    return this.selectedSettingSubject.value;
-  }
-
-  selectSetting(setting: string): void {
-    this.selectedSettingSubject.next(setting);
+  selectSettings(settings: string): void {
+    this.selectedSettingSubject.next(settings);
   }
 }

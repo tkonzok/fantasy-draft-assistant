@@ -2,45 +2,36 @@
   <div class="flex column mt-16">
     <div class="draft-position-wrapper">
       <span class="draft-position-label">Draft Position: </span>
-      <button
-        (click)="decrementDraftPosition()"
-        [disabled]="draftPosition <= 1"
-        class="draft-position-control-btn"
-      >
-        −
-      </button>
-      <span class="draft-position-display">{{ draftPosition }}</span>
-      <button
-        (click)="incrementDraftPosition()"
-        [disabled]="draftPosition >= 12"
-        class="draft-position-control-btn"
-      >
-        +
-      </button>
+      <select [value]="draftPosition" (change)="selectDraftPosition($event)" class="select-dropdown">
+        <option *ngFor="let position of draftPositions" [value]="position">
+          {{ position }}
+        </option>
+      </select>
       <span class="draft-position-label">of </span>
-      <button
-        (click)="decrementTotalDraftPositions()"
-        [disabled]="totalDraftPositions <= 1"
-        class="draft-position-control-btn"
-      >
-        −
-      </button>
       <span class="draft-position-display">{{ totalDraftPositions }}</span>
-      <button
-        (click)="incrementTotalDraftPositions()"
-        class="draft-position-control-btn"
-      >
-        +
-      </button>
     </div>
-    <div class="settings-wrapper">
-      <button
-        *ngFor="let setting of availableSettings"
-        (click)="selectSetting(setting)"
-        [ngClass]="{ selected: selectedSetting === setting }"
-        class="select-setting-btn"
-      >
-        {{ setting }}
+    <div class="select-wrapper">
+      <button (click)="openSettingsModal()">
+        New Draft
+      </button>
+      <span>Draft:</span>
+      <select [(ngModel)]="selectedDraftId" (ngModelChange)="selectDraft($event)" class="select-dropdown">
+        <option value="" disabled>none</option>
+        <option *ngFor="let draft of availableDrafts" [value]="draft.id">
+          {{ draft.name }}
+        </option>
+      </select>
+      <span>Settings:</span>
+      <select [value]="selectedSetting" (change)="selectSetting($event)" class="select-dropdown">
+        <option *ngFor="let setting of availableSettings" [value]="setting">
+          {{ setting }}
+        </option>
+      </select>
+      <button (click)="reset()">
+        Reset
+      </button>
+      <button (click)="delete()">
+        Delete
       </button>
     </div>
     <app-drafted-team></app-drafted-team>
